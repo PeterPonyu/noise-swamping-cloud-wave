@@ -37,12 +37,10 @@ trim() {
 # The rented image must already contain a CUDA-capable torch build. Installing torch
 # after rental is slow and can silently select an incompatible CUDA wheel.
 need_command "$PY"
-required_cuda_cards=1
-[ "$WAVE" = "deletion-wave1" ] && required_cuda_cards=2
-if ! torch_report="$($PY - "$required_cuda_cards" <<'PY'
+if ! torch_report="$("$PY" - "$WAVE" 2>&1 <<'PY'
 import sys
 
-required = int(sys.argv[1])
+required = 2 if sys.argv[1] == "deletion-wave1" else 1
 try:
     import torch
 except Exception as exc:
@@ -58,6 +56,28 @@ PY
   die "torch/CUDA probe failed: $torch_report"
 fi
 ok "$torch_report"
+
+if ! dependency_report="$($PY - <<'PY' 2>&1
+import importlib
+
+required = ("numpy", "scipy", "transformers", "huggingface_hub", "bitsandbytes")
+missing = []
+versions = []
+for name in required:
+    try:
+        module = importlib.import_module(name)
+    except Exception as exc:
+        missing.append(f"{name}: {exc}")
+        continue
+    versions.append(f"{name}={getattr(module, '__version__', '?')}")
+if missing:
+    raise SystemExit("; ".join(missing))
+print(" ".join(versions))
+PY
+)"; then
+  die "runtime dependency probe failed: $dependency_report"
+fi
+ok "runtime dependencies: $dependency_report"
 
 # Models must go to the large data volume, never the small system disk.
 [ -d "$DATA_DISK" ] || die "DATA_DISK does not exist: $DATA_DISK"
@@ -81,6 +101,10 @@ if [ "$WAVE" = "deletion-wave1" ]; then
   [ "${#gpu_rows[@]}" -ge 2 ] || die "deletion-wave1 needs 2 cards, found ${#gpu_rows[@]}"
   IFS=',' read -r gpu0_index gpu0_name gpu0_mem <<< "${gpu_rows[0]}"
   IFS=',' read -r gpu1_index gpu1_name gpu1_mem <<< "${gpu_rows[1]}"
+  gpu0_index="$(trim "$gpu0_index")"
+  gpu1_index="$(trim "$gpu1_index")"
+  [ "$gpu0_index" = "0" ] || die "deletion-wave1 GPU0 inventory row has physical index $gpu0_index"
+  [ "$gpu1_index" = "1" ] || die "deletion-wave1 GPU1 inventory row has physical index $gpu1_index"
   gpu0_name="$(trim "$gpu0_name")"
   gpu1_name="$(trim "$gpu1_name")"
   gpu0_mem="$(trim "$gpu0_mem")"
@@ -117,17 +141,25 @@ else
   if hf_identity="$(HF_PREFLIGHT_TOKEN="$hf_token" "$PY" - <<'PY' 2>&1
 import json
 import os
+import urllib.error
 import urllib.request
 
 request = urllib.request.Request(
     "https://huggingface.co/api/whoami-v2",
     headers={"Authorization": f"Bearer {os.environ['HF_PREFLIGHT_TOKEN']}"},
 )
-with urllib.request.urlopen(request, timeout=8) as response:
-    payload = json.load(response)
+try:
+    with urllib.request.urlopen(request, timeout=8) as response:
+        payload = json.load(response)
+except urllib.error.HTTPError as exc:
+    raise SystemExit(f"HTTP {exc.code}") from None
+except urllib.error.URLError as exc:
+    raise SystemExit(f"network error: {exc.reason}") from None
+except TimeoutError:
+    raise SystemExit("network timeout") from None
 name = payload.get("name") or payload.get("fullname")
 if not name:
-    raise RuntimeError("authentication response has no account name")
+    raise SystemExit("authentication response has no account name")
 print(name)
 PY
   )"; then

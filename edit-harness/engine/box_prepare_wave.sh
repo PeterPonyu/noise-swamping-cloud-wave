@@ -237,6 +237,7 @@ phase_check(){
   if [ "$FAILED" -eq 0 ]; then
     {
       printf 'READY wave=%s host=%s at=%s\n' "$WAVE" "$(hostname)" "$(date -u '+%FT%TZ')"
+      printf 'host=%s\n' "$(hostname)"
       printf 'driver_sha256=%s\n' "$(sha256sum "$driver" | cut -d' ' -f1)"
       printf 'prepare_sha256=%s\n' "$(sha256sum "$0" | cut -d' ' -f1)"
       printf 'counterfact_sha256=%s\n' "$EXPECTED_DATA_SHA"

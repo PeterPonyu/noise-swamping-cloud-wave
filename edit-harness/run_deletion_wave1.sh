@@ -15,6 +15,7 @@ expected_sha=$(sha256sum "$0" | cut -d' ' -f1)
 prepare_sha=$(sha256sum "$H/engine/box_prepare_wave.sh" | cut -d' ' -f1)
 grep -qx "driver_sha256=$expected_sha" "$READY" || { echo "ABORT: stale BOX_READY receipt for a different driver hash" >&2; exit 8; }
 grep -qx "prepare_sha256=$prepare_sha" "$READY" || { echo "ABORT: stale BOX_READY receipt for a different prepare hash" >&2; exit 8; }
+"$H/engine/box_preflight.sh" deletion-wave1 || { echo "ABORT: fresh-box preflight failed; do not spend" >&2; exit 8; }
 for gate in engine/DELETION_PHASEL_GD1_PASS.ok engine/DELETION_PHASEL_GD2_PASS.ok engine/DELETION_PHASEL_TEXT_PASS.ok; do
   [ -f "$gate" ] || { echo "ABORT: missing Phase-L receipt $gate" >&2; exit 7; }
 done

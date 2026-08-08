@@ -90,8 +90,9 @@ tail -f engine/paperb_h11_missing_card1.nohup.log
 ### After Completion
 
 ```bash
-# Pull results back to local machine
-bash engine/box_paperb_h11_pull.sh REMOTE_HOST
+# Pull results back to local machine. Defaults: port 36039 and remote harness
+# /root/edit-harness-deploy-20260727; override with REMOTE_PORT or arg 2.
+bash engine/box_paperb_h11_pull.sh root@connect.cqa1.seetacloud.com
 
 # Results pulled:
 # - 5 × QS_phase1_table.json
@@ -104,7 +105,7 @@ bash engine/box_paperb_h11_pull.sh REMOTE_HOST
 ## Result Aggregation
 
 The driver calls `experiments/paperb_curve_readout.py` after all cells complete. This script:
-1. Checks for all 9 required cells (6 old + 3 new)
+1. Checks all 9 required curve cells (Qwen-3B, Gemma-2B and Phi-3.5, each at 3 seeds)
 2. Computes aggregate statistics (qwen/llama monotonicity, family separation, NSR)
 3. Writes `results/quant_survival/aggregate/curve_local_readout.json`
 4. Creates `engine/PAPERB_CURVE_GS3_PASS.ok` if G-S3 passes

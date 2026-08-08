@@ -1,5 +1,7 @@
 # Frame-A 恢复状态报告 (2026-07-29)
 
+> **历史状态提示（2026-08-08）**：本文件记录 2026-07-29 的恢复现场，不能作为当前 deletion、D2 或 Frame-A 门控依据。当前权威状态见 [`docs/reports/CURRENT-STATE-RECONCILIATION-2026-08-08.md`](../docs/reports/CURRENT-STATE-RECONCILIATION-2026-08-08.md) 及其中链接的 JSON receipts。H8 现为 `PREREG_MIXED_RESULT`；H11 已以 G-S3 PASS 完成；Frame-A provenance 为 99/99 PASS 但 substantive router verdict 仍为 KILL；H4/H17 measurement 完成但 `TEXT_PASS=false`，Wave 1 继续取消。历史正文保留仅用于故障恢复审计。
+
 ## 执行摘要
 
 **状态**: 🟢 **恢复流程已启动并自动化**
