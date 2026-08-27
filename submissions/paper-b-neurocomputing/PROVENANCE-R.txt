@@ -1,6 +1,0 @@
-# Figure provenance
-- fig01: hand-authored codec-scope schematic; no data.
-- fig02: `edit-harness/results/quant_survival/aggregate/quant_survival_repair_v1.json`; asserted schema version 1.2.1 and n_boot=500. Fields: `cells[*].arms[*].absolute_quantized_esr.point`, `conditional_survival_given_fp32_worked.point`.
-- fig03: same canonical v1.2.1 JSON. Fields: `flat_rank.point`, `within_probe_rank.point`, `edit_level_ranks.signed_mean.point`.
-- fig04: `edit-harness/results/quant_survival/aggregate/gate_readout.json`; fields `cells[*].c3.{nf4dq,int8}.{median_ratio_mean,r_func_mean,r_param_mean}`. These are legacy sensitivity observations; amended K3 is explicitly UNADJUDICATED.
-- Outputs are deterministic R/tikzDevice standalone vector PDFs and 200-dpi QA PNGs.

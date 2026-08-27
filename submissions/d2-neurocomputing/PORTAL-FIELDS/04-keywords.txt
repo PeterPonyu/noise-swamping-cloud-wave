@@ -1,8 +1,0 @@
-knowledge editing
-model merging
-neural network dynamics
-rank-one updates
-edit federation
-perturbation gain
-learning systems
-constructive interference

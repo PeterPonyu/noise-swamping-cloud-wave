@@ -1,5 +1,0 @@
-First operating map of rank-one knowledge-edit federation: 22 cells, 7 families
-Merged edits show two regimes: destructive high-gain, constructive low-gain layers
-A measurable layer gain screens the regimes; frozen predictions held (rho -0.82)
-Constructive merging is depth-gated, not scale- or family-specific
-Gain-screened admission avoids 0.72 logits per edit vs random at a 25% budget

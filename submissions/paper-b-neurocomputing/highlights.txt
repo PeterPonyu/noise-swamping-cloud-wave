@@ -1,5 +1,0 @@
-- ROME efficacy exceeds the NF4 threshold on both primary models.
-- Qwen breaks the predicted editor-robustness ordering under NF4.
-- INT8 and edited-layer NF4 preserve damage ranks on both validated cells.
-- Full-model NF4 flat-rank falls from 0.904 at 1B to 0.680 at 3B; the operational edit-level signed-mean rank survives at 4-bit full-model on both validated ROME cells.
-- Total-rounding reconstruction gap is far smaller than per-parameter quantization error (descriptive, not a unique mechanism).

@@ -1,7 +1,0 @@
-Name: Zeyu Fu
-Email: fuzeyu09@gmail.com
-ORCID: 0009-0001-8329-0108
-Affiliation: Army Medical University (Third Military Medical University)
-City: Chongqing
-Country: China
-Role: Corresponding Author
